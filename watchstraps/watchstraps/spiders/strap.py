@@ -10,10 +10,10 @@ class StrapSpider(CrawlSpider):
     
     rules = (
         # find the strap types
-        Rule(LinkExtractor(allow=(r"\(straps\.php\)",))),
+        Rule(LinkExtractor(allow=(r"(straps\.php)",))),
         # find the straps sizes
         Rule(LinkExtractor(allow=(r"[a-zA-Z]+-straps/([0-9]+mm[-up]*|[a-zA-Z0-9-]+).php",))),
-        # its a product page
+        # its a product list page
         Rule(LinkExtractor(allow=(r"[a-zA-Z]+-straps/([0-9]+mm[-up]*|[a-zA-Z0-9-]+)/([a-zA-Z0-9-]+.php)",)), callback ="parse_strap")
         
     )
