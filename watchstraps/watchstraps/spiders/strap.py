@@ -1,6 +1,9 @@
 import scrapy
 from scrapy.linkextractors import LinkExtractor
+from scrapy.loader import ItemLoader
 from scrapy.spiders import CrawlSpider, Rule
+
+from ..items import Watchstrap
 
 
 class StrapSpider(CrawlSpider):
@@ -19,8 +22,15 @@ class StrapSpider(CrawlSpider):
     )
 
     def parse_strap(self, response):
-        yield {
-            "name": response.css(".product-name").css("h1::text").get(),
-            "price": response.css(".price::text").get(),
-            "description": response.css("div#product_tabs_description_contents").css("div.std::text").get(),
-        }
+        loader = ItemLoader(item=Watchstrap(), response=response)
+        loader.add_css("name", ".product-name h1::text")
+        loader.add_css("price", ".price::text")
+        loader.add_css("description", "div#product_tabs_description_contents div.std::text")
+        
+        # yield {
+        #     "name": response.css(".product-name").css("h1::text").get(),
+        #     "price": response.css(".price::text").get(),
+        #     "description": response.css("div#product_tabs_description_contents").css("div.std::text").get(),
+        # }
+        
+        return loader.load_item()

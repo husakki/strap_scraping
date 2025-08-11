@@ -4,9 +4,18 @@
 # https://docs.scrapy.org/en/latest/topics/items.html
 
 import scrapy
+from itemloaders.processors import MapCompose, TakeFirst
+from scrapy.item import Field, Item
+from w3lib.html import remove_tags
 
 
-class WatchstrapsItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+class Watchstrap(Item):
+    name = Field(
+        input_processor= MapCompose(remove_tags),
+        output_processor= TakeFirst())
+    price = Field(
+        input_processor= MapCompose(remove_tags),
+        output_processor= TakeFirst())
+    description = Field(
+        input_processor= MapCompose(remove_tags),
+        output_processor= TakeFirst())
