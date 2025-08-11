@@ -19,4 +19,8 @@ class StrapSpider(CrawlSpider):
     )
 
     def parse_strap(self, response):
-        pass
+        yield {
+            "name": response.css(".product-name").css("h1::text").get(),
+            "price": response.css(".price::text").get(),
+            "description": response.css("div#product_tabs_description_contents").css("div.std::text").get(),
+        }
