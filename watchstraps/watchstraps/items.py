@@ -8,6 +8,8 @@ from itemloaders.processors import MapCompose, TakeFirst
 from scrapy.item import Field, Item
 from w3lib.html import remove_tags
 
+# TODO price remove the currency symbol 
+# TODO description clean up the whitespace and newlines
 
 class Watchstrap(Item):
     name = Field(
