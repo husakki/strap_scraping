@@ -1,8 +1,3 @@
-# Define here the models for your scraped items
-#
-# See documentation in:
-# https://docs.scrapy.org/en/latest/topics/items.html
-
 import scrapy
 from itemloaders.processors import MapCompose, TakeFirst
 from scrapy.item import Field, Item
@@ -18,4 +13,7 @@ class Watchstrap(Item):
         output_processor= TakeFirst())
     description = Field(
         input_processor= MapCompose(remove_tags, lambda x: x.strip()),
+        output_processor= TakeFirst())
+    size = Field(
+        input_processor= MapCompose(remove_tags),
         output_processor= TakeFirst())
