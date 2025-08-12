@@ -202,4 +202,4 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 /misc
-watchstraps/*.csv
+/scrapy_output
