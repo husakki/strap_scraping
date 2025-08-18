@@ -24,34 +24,23 @@ class StrapSpider(CrawlSpider):
     )
     
     def parse(self, response):
-        self.logger.info(f"!!!Visiting!!! {response.url}")
         yield scrapy.Request(response.url, self.parse_strap)
 
     def parse_strap(self, response):
-        self.logger.info(f"Parsing strap from {response.url}")
-        # TODO if "strap" is not in the URL, skip the item
-        if "strap" not in response.url:
+        match = re.search(r"\S*[0-9]+\S*.php", response.url)
+        if not match:
             self.logger.info(f"Skipping {response.url} as it does not contain 'strap'")
             return
-        # TODO get the response URL and extract the size from it
-        match = re.search(r"([0-9]+mm).php|([0-9]+mm[a-zA-Z-]*).php|([a-zA-Z-]*[0-9]+mm).php", response.url)
+        match = re.search(r"([a-zA-Z-]*[0-9]+mm).php", response.url)
         size = None
         if match:
             if match.group(1):
-                self.logger.info(f"Found size g1: {match.group(1)}")
-                size = match.group(1)
-            elif match.group(2):
-                self.logger.info(f"Found size g2: {match.group(2)}")
-                # Remove everything after the digits+mm and prepend ">"
-                base = re.match(r"([0-9]+mm)", match.group(2))
+                base = re.search(r"([0-9]+mm)", match.group(1))
                 if base:
-                    size = ">" + base.group(1)
-            elif match.group(3):
-                self.logger.info(f"Found size g3: {match.group(3)}")
-                # Remove everything before the digits+mm and prepend "<"
-                base = re.search(r"([0-9]+mm)", match.group(3))
-                if base:
-                    size = "<" + base.group(1)
+                    size = base.group(1)
+                else:
+                    size = 0
+        
                     
         loader = ItemLoader(item=Watchstrap(), response=response)
         loader.add_css("name", ".product-name h1::text")
