@@ -22,8 +22,13 @@ class StrapSpider(CrawlSpider):
         Rule(LinkExtractor(allow=(r"[a-zA-Z]+-straps/([0-9]+mm[-up]*|[a-zA-Z0-9-]+)/([a-zA-Z0-9-]+.php)",)), callback ="parse_strap")
         
     )
+    
+    def parse(self, response):
+        self.logger.info(f"!!!Visiting!!! {response.url}")
+        yield scrapy.Request(response.url, self.parse_strap)
 
     def parse_strap(self, response):
+        self.logger.info(f"Parsing strap from {response.url}")
         # TODO if "strap" is not in the URL, skip the item
         if "strap" not in response.url:
             self.logger.info(f"Skipping {response.url} as it does not contain 'strap'")
@@ -33,13 +38,16 @@ class StrapSpider(CrawlSpider):
         size = None
         if match:
             if match.group(1):
+                self.logger.info(f"Found size g1: {match.group(1)}")
                 size = match.group(1)
             elif match.group(2):
+                self.logger.info(f"Found size g2: {match.group(2)}")
                 # Remove everything after the digits+mm and prepend ">"
                 base = re.match(r"([0-9]+mm)", match.group(2))
                 if base:
                     size = ">" + base.group(1)
             elif match.group(3):
+                self.logger.info(f"Found size g3: {match.group(3)}")
                 # Remove everything before the digits+mm and prepend "<"
                 base = re.search(r"([0-9]+mm)", match.group(3))
                 if base:
