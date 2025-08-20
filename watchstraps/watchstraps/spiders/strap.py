@@ -17,9 +17,9 @@ class StrapSpider(CrawlSpider):
         # find the strap types
         Rule(LinkExtractor(allow=(r"(straps\.php)",))),
         # find the straps sizes
-        Rule(LinkExtractor(allow=(r"[a-zA-Z]+-straps/([0-9]+mm[-up]*|[a-zA-Z0-9-]+).php",))),
+        Rule(LinkExtractor(allow=(r"[a-zA-Z]+-straps/([0-9]+mm[-up]*|[a-zA-Z0-9-]+).php",), deny=(r"(?i)^(?=.*(?:springbar|bracelet)).*\.php$"))),
         # its a product list page
-        Rule(LinkExtractor(allow=(r"[a-zA-Z]+-straps/([0-9]+mm[-up]*|[a-zA-Z0-9-]+)/([a-zA-Z0-9-]+.php)",)), callback ="parse_strap")
+        Rule(LinkExtractor(allow=(r"[a-zA-Z]+-straps/([0-9]+mm[-up]*|[a-zA-Z0-9-]+)/([a-zA-Z0-9-]+.php)",), deny=(r"(?i)^(?=.*(?:springbar|bracelet)).*\.php$")), callback ="parse_strap")
         
     )
     
@@ -27,10 +27,6 @@ class StrapSpider(CrawlSpider):
         yield scrapy.Request(response.url, self.parse_strap)
 
     def parse_strap(self, response):
-        match = re.search(r"\S*[0-9]+\S*.php", response.url)
-        if not match:
-            self.logger.info(f"Skipping {response.url} as it does not contain 'strap'")
-            return
         match = re.search(r"([a-zA-Z-]*[0-9]+mm).php", response.url)
         size = None
         if match:
