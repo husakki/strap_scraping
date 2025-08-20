@@ -27,15 +27,13 @@ class StrapSpider(CrawlSpider):
         yield scrapy.Request(response.url, self.parse_strap)
 
     def parse_strap(self, response):
-        match = re.search(r"([a-zA-Z-]*[0-9]+mm).php", response.url)
-        size = None
+        match = re.search(r"/[a-zA-Z-]*(\d+)mm[\w-]*/", response.url)
+        size = "0"
         if match:
             if match.group(1):
-                base = re.search(r"([0-9]+mm)", match.group(1))
-                if base:
-                    size = base.group(1)
-                else:
-                    size = 0
+                size = str(match.group(1))
+        else:
+            size = "0"
         
                     
         loader = ItemLoader(item=Watchstrap(), response=response)
