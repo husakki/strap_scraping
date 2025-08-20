@@ -47,7 +47,8 @@ class StrapSpider(CrawlSpider):
         loader.add_css("price", ".price::text")
         loader.add_css("description", "div#product_tabs_description_contents div.std::text")
         loader.add_value("size", size)
-        
+        loader.add_value("link", response.url)
+
         # yield {
         #     "name": response.css(".product-name").css("h1::text").get(),
         #     "price": response.css(".price::text").get(),

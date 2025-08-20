@@ -17,3 +17,6 @@ class Watchstrap(Item):
     size = Field(
         input_processor= MapCompose(remove_tags),
         output_processor= TakeFirst())
+    link = Field(
+        input_processor= MapCompose(remove_tags),
+        output_processor= TakeFirst())
