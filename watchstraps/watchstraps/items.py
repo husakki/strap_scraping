@@ -15,7 +15,7 @@ class Watchstrap(Item):
         input_processor= MapCompose(remove_tags, lambda x: x.strip()),
         output_processor= TakeFirst())
     size = Field(
-        input_processor= MapCompose(remove_tags),
+        input_processor= MapCompose(remove_tags, lambda x: x.replace('-', ' ').replace('and', '').replace('  ', ' ').strip()),
         output_processor= TakeFirst())
     link = Field(
         input_processor= MapCompose(remove_tags),
